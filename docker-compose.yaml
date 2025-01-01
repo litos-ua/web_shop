@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+
+#  nodejs-app:
+#    #image: node:20
+#    image: node:16.17.0
+#    container_name: dev_${PROJECT_NAME}
+#    build:
+#      context: ./
+#      dockerfile: docker/configs/nodejs/Dockerfile
+#      args:
+#        WORKDIR: ${WORKDIR}
+#    ports:
+#      - ${HTTP_PORT}:3000
+#    volumes:
+#      - .:${WORKDIR}
+#    working_dir: ${WORKDIR}
+#    command: npm start
+
+  node-shop:
+    image: node:20
+    #image: node:16.17.0
+    container_name: asp_${PROJECT_NAME}
+    build:
+      context: ./
+      dockerfile: docker/configs/nodejs/Dockerfile
+      args:
+        WORKDIR: ${WORKDIR}
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:${WORKDIR}
+    working_dir: ${WORKDIR}
+    #command: ["npx", "serve", "-s", "build"]
+
+
