@@ -26,7 +26,7 @@ namespace InternetShopApp.Data
             //modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
             //modelBuilder.ApplyConfiguration(new CartConfiguration());
             //modelBuilder.ApplyConfiguration(new CartItemConfiguration());
-            //modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             //modelBuilder.ApplyConfiguration(new StockConfiguration());
         }        
     }
