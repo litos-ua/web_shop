@@ -80,7 +80,8 @@ namespace InternetShopApp.Data.Configurations
             // Конфигурация PhoneNumber
             builder.Property(u => u.PhoneNumber)
                 .IsRequired()
-                .HasMaxLength(15);
+                .HasMaxLength(15)
+                .HasDefaultValue("");
 
             // Конфигурация CreatedAt
             builder.Property(u => u.CreatedAt)

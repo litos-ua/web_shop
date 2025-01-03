@@ -71,7 +71,7 @@ namespace InternetShopApp.Data.Entities
         [Required]
         [MaxLength(15)]
         [Phone]
-        public string? PhoneNumber { get; set; } 
+        public string? PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         public UserRole Role { get; set; } = UserRole.User;

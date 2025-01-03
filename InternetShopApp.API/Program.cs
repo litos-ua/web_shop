@@ -3,7 +3,9 @@ using InternetShopApp.Data;
 using InternetShopApp.Data.Repositories;
 using InternetShopApp.Data.Repositories.Interfaces;
 using InternetShopApp.Services;
+using InternetShopApp.Services.Auth;
 using InternetShopApp.Services.Interfaces;
+using InternetShopApp.Services.Interfaces.Auth;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +48,7 @@ builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

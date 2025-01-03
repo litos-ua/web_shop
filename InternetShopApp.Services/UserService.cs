@@ -13,6 +13,14 @@ namespace InternetShopApp.Services
             _userRepository = userRepository;
         }
 
+
+        public async Task<Domain.Entities.User?> GetByEmailAsync(string email)
+        {
+            // Прямое использование репозитория для поиска
+            var userEntity = await _userRepository.FindAsync(u => u.Email == email);
+            return userEntity?.Select(MapToDomain).FirstOrDefault();
+        }
+
         public async Task<Domain.Entities.Cart?> GetCartByUserIdAsync(int userId)
         {
             var cartData = await _userRepository.GetCartByUserIdAsync(userId);
