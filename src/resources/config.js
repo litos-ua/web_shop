@@ -1,5 +1,5 @@
 import {getTokenFromLocalStorage} from "../utils";
-import {setTokenToLocalStorage} from "../utils/token/setTokenToLocalStorage";
+import {setTokenToLocalStorage} from "../utils";
 
 export const configObj ={
     //axiosUrl: "http://192.168.0.31/api/",
