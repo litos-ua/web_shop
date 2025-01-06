@@ -34,9 +34,58 @@
 //}
 
 
+//using System.ComponentModel.DataAnnotations;
+//using InternetShopApp.Domain.Entities.Enum;
+
+
+//namespace InternetShopApp.Data.Entities
+//{
+//    public class User
+//    {
+//        public int Id { get; set; }
+
+//        [Required]
+//        [MaxLength(50)]
+//        public string Username { get; set; }
+
+//        [Required]
+//        [MaxLength(100)]
+//        [EmailAddress]
+//        //[Index(IsUnique = true)]
+//        public string Email { get; set; }
+
+//        [Required]
+//        [MaxLength(100)]
+//        public string PasswordHash { get; set; }
+
+//        [Required]
+//        [MaxLength(100)]
+//        public string? Fullname { get; set; }
+
+//        [MaxLength(200)]
+//        public string? Address { get; set; }
+
+//        [Required]
+//        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+//        [Required]
+//        [MaxLength(15)]
+//        [Phone]
+//        public string? PhoneNumber { get; set; } = string.Empty;
+
+//        [Required]
+//        public UserRole Role { get; set; } = UserRole.User;
+
+//        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
+//        public ICollection<Order> Orders { get; set; } = new List<Order>(); 
+//    }
+
+//}
+
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using InternetShopApp.Domain.Entities.Enum;
-
 
 namespace InternetShopApp.Data.Entities
 {
@@ -51,7 +100,6 @@ namespace InternetShopApp.Data.Entities
         [Required]
         [MaxLength(100)]
         [EmailAddress]
-        //[Index(IsUnique = true)]
         public string Email { get; set; }
 
         [Required]
@@ -76,8 +124,18 @@ namespace InternetShopApp.Data.Entities
         [Required]
         public UserRole Role { get; set; } = UserRole.User;
 
-        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
-        public ICollection<Order> Orders { get; set; } = new List<Order>(); 
-    }
+        // Поля для email-аутентификации
+        //[MaxLength(200)]
+        //public string? EmailVerificationToken { get; set; } // Токен для подтверждения email
 
+        //public DateTime? EmailVerifiedAt { get; set; } // Дата и время подтверждения email (null, если не подтвержден)
+
+        // Связь с токенами
+        public ICollection<UserToken> UserTokens { get; set; } = new List<UserToken>();
+
+        // Навигационные свойства для связанных сущностей
+        public ICollection<Cart> Carts { get; set; } = new List<Cart>();
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+    }
 }
+
