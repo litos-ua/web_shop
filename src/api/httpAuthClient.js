@@ -19,6 +19,10 @@ export const post = async (url, data, headers = {}) => {
                 ...headers
             }
         });
+
+        // Вывод ответа от сервера
+        console.log('POST Response:', response);
+
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error;

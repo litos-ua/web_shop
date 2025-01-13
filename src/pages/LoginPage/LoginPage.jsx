@@ -14,18 +14,18 @@ import { configObj } from '../../resources';
 export function LoginPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [Email, setEmail] = useState("");
+    const [PasswordHash, setPasswordHash] = useState("");
     const [emailError, setEmailError] = useState("");
     const [emailConfirmed, setEmailConfirmed] = useState(false);
-    const [passwordError, setPasswordError] = useState("");
+    const [PasswordHashError, setPasswordHashError] = useState("");
     const [loginError, setLoginError] = useState("");
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string()
+        Email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
-        password: Yup.string()
+        PasswordHash: Yup.string()
             .min(8, "Password must be at least 8 characters")
             .required("Password is required"),
     });
@@ -38,68 +38,58 @@ export function LoginPage() {
 
     const handlePasswordChange = (e) => {
         const value = e.target.value;
-        setPassword(value);
-        setPasswordError(value.length >= 8 ? "" : "Password must be at least 8 characters");
+        setPasswordHash(value);
+        setPasswordHashError(value.length >= 8 ? "" : "Password must be at least 8 characters");
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            await validationSchema.validate({ email, password }, { abortEarly: false });
+            await validationSchema.validate({ Email, PasswordHash }, { abortEarly: false });
+            console.log('Validation successful for:', { Email, PasswordHash });
 
-            const response = await post('/login', { email, password });
-            const {user, status, token} = response;
-            //console.log('USER', user.id);
-            //console.log('response', response);
+            const response = await post('/Auth/login', { Email, PasswordHash });
+            console.log('Server response:', response);
+
+            const { user, status, token } = response;
+
+            console.log('Extracted data:', { user, status, token });
 
             if (status === 201 && token) {
-                // Login successful
-                //dispatch(loginSuccess());
-                //console.log('id:', user.id, 'role:', user.role)
-                dispatch(loginSuccess({ id: user.id, email: user.email, role: user.role }));
+                console.log('Login successful, user authenticated.');
+                dispatch(loginSuccess({ Id: user.Id, Email: user.Email, Role: user.Role }));
                 navigate(ROUTE.HOME);
                 setEmailConfirmed(true);
-                //localStorage.setItem('token', token);
                 configObj.setToken(token);
             } else if (status === 207 && token) {
-                // Partial authentication due to unverified email
-                console.log('Token:', token);
-                navigate(`${ROUTE.EMAIL_VERIFICATION.replace(":email", user.email)}`);
+                console.log('Partial authentication. Email not verified:', user.Email);
+                navigate(`${ROUTE.EMAIL_VERIFICATION.replace(":email", user.Email)}`);
                 setLoginError("Email not verified. You are partially authenticated. Please verify your email address.");
-                //localStorage.setItem('token', token);
                 configObj.setToken(token);
+            } else {
+                console.error('Unexpected status:', status);
             }
         } catch (error) {
             console.error("Login failed:", error);
-            const { status } = error;
-            console.log('STATUS', status);
 
-            if (error) {
-                // Handle error response from server
+            const status = error?.response?.status; // Извлекаем статус из ответа сервера
+            console.log('Error response status:', status);
 
-                if (status === 404) {
-                    // User not found error
-                    setLoginError("User not found. Please check your email.");
-                    console.log('setLoginError', setLoginError);
-                } else if (status === 403 || status === 401) {
-                    // Email not verified or invalid email/password error
-                    if (status === 403) {
-                        setLoginError("Email not verified. You are partially authenticated. Please verify your email address.");
-                    } else {
-                        setLoginError("Invalid email or password. Please try again.");
-                    }
-                    // setEmailConfirmed(false); // If needed, uncomment this line
+            if (status === 404) {
+                setLoginError("User not found. Please check your email.");
+            } else if (status === 403 || status === 401) {
+                if (status === 403) {
+                    setLoginError("Email not verified. You are partially authenticated. Please verify your email address.");
                 } else {
-                    // Other errors
-                    setLoginError("An error occurred. Please try again later.");
+                    setLoginError("Invalid email or password. Please try again.");
                 }
             } else {
-                // Handle other errors
                 setLoginError("An error occurred. Please try again later.");
             }
         }
     };
+
 
     return (
         <Box>
@@ -115,7 +105,7 @@ export function LoginPage() {
                                 <TextField
                                     type="text"
                                     label="Email Address"
-                                    value={email}
+                                    value={Email}
                                     onChange={handleEmailChange}
                                     variant="outlined"
                                     fullWidth
@@ -131,13 +121,13 @@ export function LoginPage() {
                                 <TextField
                                     type="password"
                                     label="Password"
-                                    value={password}
+                                    value={PasswordHash}
                                     onChange={handlePasswordChange}
                                     variant="outlined"
                                     fullWidth
                                     required
-                                    error={!!passwordError}
-                                    helperText={passwordError}
+                                    error={!!PasswordHashError}
+                                    helperText={PasswordHashError}
                                     InputProps={{
                                         startAdornment: <FaLock />
                                     }}

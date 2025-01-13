@@ -8,6 +8,7 @@ import { ROUTE } from '../../router';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAndClearData, selectIsAuthenticated, selectUserRole } from '../../ducks';
+import { post } from "../../api";
 
 export function AuthButtons() {
     const dispatch = useDispatch();
@@ -31,10 +32,36 @@ export function AuthButtons() {
         }
     };
 
-    const handleLogOut = () => {
-        dispatch(logoutAndClearData());
-        localStorage.removeItem('token');
+    const handleLogOut = async () => {
+        const token = localStorage.getItem('token'); // Получение токена из локального хранилища
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            withCredentials: true,
+        };
+        const body = {
+            AccessToken: token, // Передача токена в теле запроса
+        };
+
+        try {
+            // Вывод данных запроса в консоль
+            console.log('Request to /Auth/logout:', {
+                headers,
+                body,
+            });
+
+            // Отправка запроса логаута
+            await post('/Auth/logout', body, headers);
+        } catch (error) {
+            console.error('Failed to logout from server:', error);
+        } finally {
+            // Очистка локальных данных
+            dispatch(logoutAndClearData());
+            localStorage.removeItem('token');
+        }
     };
+
+
+
 
     return (
         <Box className="authbuttons">
