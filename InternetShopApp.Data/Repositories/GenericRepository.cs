@@ -7,7 +7,7 @@ namespace InternetShopApp.Data.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly InternetShopContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly DbSet<T> _dbSet;
 
         public GenericRepository(InternetShopContext context)
         {

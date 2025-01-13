@@ -82,8 +82,6 @@
 
 //}
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using InternetShopApp.Domain.Entities.Enum;
 
@@ -125,17 +123,26 @@ namespace InternetShopApp.Data.Entities
         public UserRole Role { get; set; } = UserRole.User;
 
         // Поля для email-аутентификации
-        //[MaxLength(200)]
-        //public string? EmailVerificationToken { get; set; } // Токен для подтверждения email
+        public bool EmailVerified { get; set; } = false;
 
-        //public DateTime? EmailVerifiedAt { get; set; } // Дата и время подтверждения email (null, если не подтвержден)
+        // Поля для блокировки аккаунта
+        public bool? IsLocked { get; set; } = false; // Флаг блокировки
+        public DateTime? LockoutEnd { get; set; } = null; // Время окончания блокировки
+        public int? AccessFailedCount { get; set; } = 0; // Счетчик неудачных попыток входа
 
-        // Связь с токенами
+        // Поля для аудита
+        public DateTime? LastLogin { get; set; } = null; // Последний успешный вход
+
+        // Поля для восстановления пароля
+        [MaxLength(500)]
+        public string? PasswordResetToken { get; set; } = null; // Токен для сброса пароля
+        public DateTime? PasswordResetExpires { get; set; } = null; // Срок действия токена сброса
+
+        // Навигационные свойства
         public ICollection<UserToken> UserTokens { get; set; } = new List<UserToken>();
-
-        // Навигационные свойства для связанных сущностей
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }
+
 
